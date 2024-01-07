@@ -1,0 +1,373 @@
+// Variables
+// Control commonly used values in a single location.
+
+// a, .link{
+//     color: red;
+// }
+
+// .widget{
+//     color: aquamarine;
+//     background-color: aquamarine;
+// }
+
+// Variables make your code easier to maintain by giving you a way to control those values from a single location:
+
+@link-color: red;
+@link-color-hover: green;
+@widget-color: yellow;
+
+a,
+.link {
+    color: @link-color;
+}
+
+a:hover {
+    color: @link-color-hover;
+}
+
+.widget {
+    color: @widget-color;
+    background-color: @link-color;
+}
+
+
+
+// Variable Interpolation
+// The examples above focused on using variables to control values in CSS rules, but they can also be used in other places as well, such as selector names, property names, URLs and @import statements.
+
+// Selectors
+@my-selector: a;
+
+.@{my-selector} {
+    display: block;
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+// .btn{
+//     display: block;
+//     margin-top: 20px;
+//     border: none;
+//     outline: none;
+//     padding: 15px 25px;
+//     font-size: 18px;
+//     font-weight: 700;
+//     border-radius: 5px;
+//     cursor: pointer;
+// }
+
+
+
+// URLs
+
+// css
+// body{
+//     color: blue;
+//     background: url("/img/download.jpg");
+//     background-repeat: no-repeat;
+//     background-size: cover;
+// }
+
+// less method
+@image: "/img";
+
+body {
+    background: url("@{image}/download.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+
+// Properties
+@property: color;
+@font: font-size;
+
+.box {
+    @{property}: red;
+    @{font}: 50px;
+}
+
+
+// Compiles to:
+// .box{
+//     color: red;
+//     font-size: 50px;
+// }
+
+
+
+// Variable Variables
+// In Less, you can define a variable's name using another variable.
+
+@first : yellow;
+@second: green;
+
+.section {
+    @color: second;
+
+    .element {
+        color: @@color;
+    }
+}
+
+// Compiles to:
+// .section .element{
+//     color: green;
+// }
+
+
+// Lazy Evaluation
+// Variables do not have to be declared before being used.
+
+// Valid Less snippet:
+@var: @a;
+@a: 50px;
+
+.lazy-eval {
+    font-size: @a;
+    color: @link-color;
+}
+
+// compile to
+// .lazy-eval{
+//     font-size: 50px;
+// }
+
+
+// Properties as Variables (NEW!)
+// You can easily treat properties like variables using the $prop syntax. Sometimes this can make your code a little lighter.
+// .prop{
+//     padding: 20px;
+//     border-color: red;
+//     border-width: 2px;
+//     border-style: solid;
+//     color: $border-color;
+//     display: inline;
+//     font-size: 22px;
+// }
+
+
+
+// .prop{
+//     padding: 20px;
+// border-color: red;
+// border-width: 2px;
+// border-style: solid;
+// color: $border-color;
+// display: inline;
+// font-size: 22px;
+// }
+
+
+// Note that, like variables, Less will choose the last property within the current/parent scope as being the "final" value.
+.outer {
+    margin-top: 40px;
+    margin-bottom: 50px;
+    border-color: white;
+    border-width: 2px;
+    border-style: solid;
+
+    .inner {
+        color: white;
+    }
+
+    display: block;
+    width: fit-content;
+    padding: 18px 23px;
+}
+
+
+// compile to
+// .outer{
+//     margin-top: 40px;
+//     border: 2px solid white;
+//     display: block;
+//     width: fit-content;
+//     padding: 18px 23px;
+// }
+
+// .outer .inner{
+//     color: white;
+// }
+
+
+
+
+
+
+// Parent Selectors
+// Referencing parent selectors with &
+// The & operator represents the parent selectors of a nested rule and is most commonly used when applying a modifying class or pseudo-class to an existing selector:
+.prop1 {
+    margin-top: 50px;
+    padding: 20px;
+    border-color: red;
+    border-width: 2px;
+    border-style: solid;
+    color: red;
+    display: inline;
+    font-size: 22px;
+    cursor: pointer;
+    transition: .5s;
+
+    &:hover {
+        color: white;
+        border-color: white;
+        background-color: black;
+    }
+}
+
+// compile to
+// .prop1{
+//     margin-top: 50px;
+//     padding: 20px;
+//     border-color: red;
+//     border-width: 2px;
+//     border-style: solid;
+//     color: white;
+//     display: inline;
+//     font-size: 22px;
+//     cursor: pointer;
+// }
+
+// .prop1:hover{
+//     border-color: white;
+//     color: white;
+// }
+
+
+
+
+// The "parent selectors" operator has a variety of uses. Basically any time you need the selectors of the nested rules to be combined in other ways than the default. For example another typical use of the & is to produce repetitive class names:
+
+.btn {
+    display: block;
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
+.button {
+    &red {
+        background-color: red;
+    }
+
+    &yellow {
+        background-color: yellow;
+    }
+
+    &green {
+        background-color: green;
+    }
+}
+
+
+// compile to
+// .button-red{
+//     background-color: red;
+// }
+
+// .button-yellow{
+//     background-color: yellow;
+// }
+
+// .button-green{
+//     background-color: green;
+// }
+
+
+// Multiple &
+// & may appear more than once within a selector. This makes it possible to repeatedly refer to a parent selector without repeating its name.
+
+.link {
+    &+& {
+        color: yellow;
+    }
+
+    & & {
+        color: green;
+    }
+
+    && {
+        color: aqua;
+    }
+
+    &,
+    &ish {
+        color: blue;
+    }
+}
+
+
+// compile to
+// .link + .link{
+//     color: aqua;
+// }
+
+// .link .link{
+//     color: green;
+// }
+
+// .link.link{
+//     color: yellow;
+// }
+// .link , .linkish{
+//     color: blue;
+// }
+
+
+// Note that & represents all parent selectors (not just the nearest ancestor) so the following example:
+// .parent {
+//     background-color: skyblue;
+//     .link {
+//         &+& {
+//             color: yellow;
+//         }
+
+//         & & {
+//             color: green;
+//         }
+
+//         && {
+//             color: aqua;
+//         }
+
+//         &,
+//         &ish {
+//             color: red;
+//         }
+//     }
+
+// }
+
+
+// Combinatorial Explosion
+// & can also be used to generate every possible permutation of selectors in a comma separated list:
+p, a, ul, li {
+    border-top: 2px dotted #366;
+    & + & {
+      border-top: 0;
+    }
+  }
+
+// compile to
+p, a, ul, li {
+  border-top: 2px dotted #366;
+}
+
+p + p, p + a, p + ul, p + li, a + p, a + a, a + ul, a + li, ul + p, ul + a, ul + ul, ul + li, li + p, li + a, li + ul, li + li {
+  border-top: 0;
+}
